@@ -3,3 +3,4 @@ authlib
 requests
 pycryptodome
 python-dotenv
+gunicorn
