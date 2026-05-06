@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crypto Tool</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header>
+    <span class="site-title">🔐 Crypto Tool</span>
+    <div class="user-info">
+      <img src="{{ user.picture }}" alt="avatar" class="avatar"/>
+      <span>{{ user.name }}</span>
+      <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('symmetric')">Symmetric (OTP / 3DES / AES)</button>
+    <button class="tab-btn"        onclick="showTab('rsa')">RSA</button>
+  </div>
+
+  <!-- ── Symmetric Tab ── -->
+  <div id="tab-symmetric" class="tab-content active">
+    <div class="algo-bar">
+      <label>Algorithm:
+        <select id="algorithm">
+          <option>OTP</option>
+          <option>3DES</option>
+          <option>AES</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="split">
+      <!-- Encrypt -->
+      <div class="panel">
+        <div class="panel-header">Message to Encrypt</div>
+        <div class="panel-body">
+          <textarea id="enc-input" placeholder="Enter plaintext..."></textarea>
+          <div class="key-row">
+            <label class="key-label">Encryption Key</label>
+            <input id="enc-key" type="text" placeholder="Enter key"/>
+          </div>
+          <div class="btn-row">
+            <button onclick="doEncrypt()">Encrypt</button>
+            <button onclick="copyText('enc-output')">Copy</button>
+          </div>
+          <textarea id="enc-output" placeholder="Ciphertext appears here..." readonly></textarea>
+        </div>
+      </div>
+
+      <!-- Decrypt -->
+      <div class="panel">
+        <div class="panel-header">Message to Decrypt</div>
+        <div class="panel-body">
+          <textarea id="dec-input" placeholder="Enter ciphertext..."></textarea>
+          <div class="key-row">
+            <label class="key-label">Decryption Key</label>
+            <input id="dec-key" type="text" placeholder="Enter key"/>
+          </div>
+          <div class="btn-row">
+            <button class="dark-btn" onclick="doDecrypt()">Decrypt</button>
+            <button onclick="copyText('dec-output')">Copy</button>
+          </div>
+          <textarea id="dec-output" placeholder="Plaintext appears here..." readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RSA Tab ── -->
+  <div id="tab-rsa" class="tab-content">
+    <!-- Key generation -->
+    <div class="panel full-width">
+      <div class="panel-header">RSA Key Pair</div>
+      <div class="panel-body">
+        <div class="btn-row">
+          <label>Key Size:
+            <select id="rsa-bits">
+              <option>1024</option>
+              <option selected>2048</option>
+              <option>4096</option>
+            </select>
+          </label>
+          <button class="green-btn" onclick="doRsaGenerate()">Generate Keys</button>
+        </div>
+        <div class="split">
+          <div>
+            <label class="key-label">Private Key</label>
+            <textarea id="rsa-private" rows="8" readonly placeholder="Private key will appear here..."></textarea>
+          </div>
+          <div>
+            <label class="key-label">Public Key</label>
+            <textarea id="rsa-public" rows="8" readonly placeholder="Public key will appear here..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RSA Encrypt / Decrypt -->
+    <div class="split" style="margin-top:16px">
+      <div class="panel">
+        <div class="panel-header">Encrypt with Public Key</div>
+        <div class="panel-body">
+          <label>Plaintext</label>
+          <textarea id="rsa-plain-input" placeholder="Enter message..."></textarea>
+          <div class="btn-row">
+            <button onclick="doRsaEncrypt()">Encrypt</button>
+            <button onclick="copyText('rsa-cipher-output')">Copy Ciphertext</button>
+          </div>
+          <label>Ciphertext (Base64)</label>
+          <textarea id="rsa-cipher-output" readonly placeholder="Encrypted output..."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">Decrypt with Private Key</div>
+        <div class="panel-body">
+          <label>Ciphertext (Base64)</label>
+          <textarea id="rsa-cipher-input" placeholder="Paste ciphertext..."></textarea>
+          <div class="btn-row">
+            <button class="dark-btn" onclick="doRsaDecrypt()">Decrypt</button>
+            <button onclick="copyText('rsa-plain-output')">Copy Plaintext</button>
+          </div>
+          <label>Decrypted Plaintext</label>
+          <textarea id="rsa-plain-output" readonly placeholder="Decrypted output..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
